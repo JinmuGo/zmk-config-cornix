@@ -1,0 +1,12 @@
+# Left half is the central (connects to the host); right half is the peripheral.
+# Flash cornix_reset to both halves before the first flash or to clear pairing.
+---
+include:
+  - board: cornix_left//zmk
+    artifact-name: cornix_left
+  - board: cornix_right//zmk
+    artifact-name: cornix_right
+  - board: cornix_right//zmk
+    shield: settings_reset
+    snippet: nrf52840-nosd
+    artifact-name: cornix_reset
