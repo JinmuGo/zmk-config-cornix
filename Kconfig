@@ -1,0 +1,4 @@
+# The Cornix board files configure NVS settings storage for ZMK but do not
+# declare ZMK compat, which the ZMK user-config workflow requires.
+config ZMK_BOARD_COMPAT
+    default y if BOARD_CORNIX_LEFT_NRF52840_ZMK || BOARD_CORNIX_RIGHT_NRF52840_ZMK
