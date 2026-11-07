@@ -1,0 +1,191 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
+
+#define BASE 0
+#define PLAIN 1
+#define NUM 2
+#define SYM 3
+#define FN 4
+#define MOUSE 5
+#define SYS 6
+
+// Key positions (LAYOUT_50):
+//  0  1  2  3  4  5                  6  7  8  9 10 11
+// 12 13 14 15 16 17                 18 19 20 21 22 23
+// 24 25 26 27 28 29 30           31 32 33 34 35 36 37
+// 38 39 40 41 42 43                 44 45 46 47 48 49
+// 38-40 and 47-49 are the extra bottom keys; 41-46 are the thumb keys.
+#define KEYS_L 0 1 2 3 4 5 12 13 14 15 16 17 24 25 26 27 28 29 30 38 39 40
+#define KEYS_R 6 7 8 9 10 11 18 19 20 21 22 23 31 32 33 34 35 36 37 47 48 49
+#define THUMBS 41 42 43 44 45 46
+
+/ {
+    behaviors {
+        td0: td0 {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TD0";
+            #binding-cells = <0>;
+            bindings = <&kp LEFT_SHIFT>, <&kp CAPS>;
+        };
+
+        esc_dance: esc_dance {
+            compatible = "zmk,behavior-tap-dance";
+            label = "ESC_DANCE";
+            #binding-cells = <0>;
+            bindings = <&kp LCTRL>, <&kp ESC>;
+        };
+
+        // Home row mods: a key acts as a modifier only when held together with
+        // a key on the other hand or a thumb key, and never during fast typing.
+        hml: homerow_mods_left {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+            flavor = "balanced";
+            tapping-term-ms = <280>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <150>;
+            hold-trigger-key-positions = <KEYS_R THUMBS>;
+            hold-trigger-on-release;
+        };
+
+        hmr: homerow_mods_right {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            bindings = <&kp>, <&kp>;
+            flavor = "balanced";
+            tapping-term-ms = <280>;
+            quick-tap-ms = <175>;
+            require-prior-idle-ms = <150>;
+            hold-trigger-key-positions = <KEYS_L THUMBS>;
+            hold-trigger-on-release;
+        };
+
+        scroll_enc: scroll_encoder {
+            compatible = "zmk,behavior-sensor-rotate";
+            #sensor-binding-cells = <0>;
+            bindings = <&msc SCRL_DOWN>, <&msc SCRL_UP>;
+            tap-ms = <30>;
+        };
+    };
+
+    combos {
+        compatible = "zmk,combos";
+
+        esc_combo {
+            bindings = <&kp ESC>;
+            key-positions = <19 20>;
+            layers = <BASE PLAIN>;
+        };
+
+        layer_5 {
+            bindings = <&mo SYS>;
+            key-positions = <42 45>;
+        };
+
+        newHangul {
+            bindings = <&kp LC(SPACE)>;
+            key-positions = <43 44>;
+            layers = <BASE PLAIN>;
+        };
+    };
+
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            display-name = "QWERTY";
+
+            // --------------------------------------------------------------------------------
+            // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
+            // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   |
+            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | SHFT |
+            //                    | GUI | SYM | SPC |   | ENT | NUM  | ALT |
+            // Hold A S D F / J K L ; for CMD ALT SHFT CTRL / CTRL SHFT ALT CMD.
+            // Encoders: left = volume, right = scroll.
+
+            bindings = <
+&kp TAB         &kp Q          &kp W         &kp E          &kp R          &kp T                                     &kp Y           &kp U          &kp I                    &kp O         &kp P          &kp BSPC
+&kp LCTRL       &hml LGUI A    &hml LALT S   &hml LSHFT D   &hml LCTRL F   &kp G                                     &kp H           &hmr RCTRL J   &hmr RSHFT K             &hmr RALT L   &hmr RGUI SEMI &kp SQT
+&kp LEFT_SHIFT  &kp Z          &kp X         &kp C          &kp V          &kp B              &none         &none    &kp N           &kp M          &kp COMMA                &kp DOT       &kp FSLH       &kp RIGHT_SHIFT
+&none           &none          &none         &kp LGUI       &mo SYM        &lt MOUSE SPACE                           &lt FN ENTER    &mo NUM        &mt RIGHT_ALT LC(SPACE)  &none         &none          &none
+            >;
+
+            sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN &scroll_enc>;
+        };
+
+        plain_layer {
+            display-name = "PLAIN";
+
+            // Base layer without home row mods. Toggle from the Fn layer.
+
+            bindings = <
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans    &trans
+&trans  &kp A   &kp S   &kp D   &kp F   &trans                    &trans  &kp J   &kp K   &kp L   &kp SEMI  &trans
+&trans  &trans  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans    &trans
+&trans  &trans  &trans  &trans  &trans  &trans                    &trans  &trans  &trans  &trans  &trans    &trans
+            >;
+        };
+
+        lower_layer {
+            display-name = "NUMBER";
+
+            // &none keys are RGB controls on the corne; Cornix builds without underglow.
+
+            bindings = <
+&kp GRAVE  &kp N1  &kp N2  &kp N3  &kp N4  &kp N5                     &kp N6           &kp N7          &kp N8        &kp N9           &kp N0    &kp DELETE
+&trans     &trans  &trans  &trans  &trans  &trans                     &kp LEFT_ARROW   &kp DOWN_ARROW  &kp UP_ARROW  &kp RIGHT_ARROW  &kp HOME  &kp PG_UP
+&trans     &none   &none   &trans  &trans  &none   &trans    &trans   &none            &none           &none         &none            &kp END   &kp PG_DN
+&trans     &trans  &trans  &trans  &trans  &trans                     &kp INS          &trans          &trans        &trans           &trans    &trans
+            >;
+        };
+
+        raise_layer {
+            display-name = "SYMBOL";
+
+            bindings = <
+&kp TILDE  &kp EXCL          &kp AT        &kp HASH        &kp DLLR   &kp PRCNT                         &kp CARET  &kp AMPS       &kp ASTRK  &kp LPAR  &kp RPAR  &kp BSPC
+&trans     &kp LEFT_COMMAND  &kp LEFT_ALT  &kp LEFT_SHIFT  &kp LCTRL  &kp BACKSPACE                     &kp MINUS  &kp EQUAL      &kp LBKT   &kp RBKT  &kp BSLH  &kp GRAVE
+&trans     &none             &none         &none           &none      &none          &trans    &trans   &kp UNDER  &kp PLUS       &kp LBRC   &kp RBRC  &kp PIPE  &kp TILDE
+&trans     &trans            &trans        &trans          &trans     &kp SPACE                         &kp RET    &kp LG(SPACE)  &trans     &trans    &trans    &trans
+            >;
+        };
+
+        layer_3 {
+            display-name = "Fn";
+
+            bindings = <
+&trans  &kp F1      &kp F2         &kp F3         &kp F4      &kp F5                             &kp F6       &kp F7              &kp F8        &kp F9           &kp F10          &kp F11
+&trans  &bt BT_CLR  &tog PLAIN     &trans         &sys_reset  &bootloader                        &bootloader  &trans              &trans        &trans           &kp PRINTSCREEN  &kp F12
+&trans  &trans      &kp C_BRI_DEC  &kp C_BRI_INC  &trans      &trans         &trans    &trans    &trans       &kp LC(LG(K_MUTE))  &kp C_VOL_DN  &kp C_VOLUME_UP  &kp SCROLLLOCK   &kp PAUSE_BREAK
+&trans  &trans      &trans         &trans         &trans      &kp LC(SPACE)                      &trans       &trans              &trans        &trans           &trans           &trans
+            >;
+        };
+
+        mouse {
+            bindings = <
+&trans  &msc SCRL_UP    &kp PAGE_UP     &mmv MOVE_UP    &kp PAGE_DOWN    &msc SCRL_DOWN                       &trans         &trans  &trans  &trans  &trans  &trans
+&trans  &msc SCRL_LEFT  &mmv MOVE_LEFT  &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &msc SCRL_RIGHT                      &trans         &trans  &trans  &trans  &trans  &trans
+&trans  &trans          &mkp LCLK       &mkp MCLK       &mkp RCLK        &trans           &trans    &trans    &trans         &trans  &trans  &trans  &trans  &trans
+&trans  &trans          &trans          &trans          &trans           &trans                               &kp LC(SPACE)  &trans  &trans  &trans  &trans  &trans
+            >;
+        };
+
+        layer_5 {
+            bindings = <
+&trans  &trans          &trans        &trans        &trans        &trans                       &trans            &trans                  &trans                &trans             &trans  &trans
+&trans  &bt BT_CLR_ALL  &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3                 &kp LA(LG(LEFT))  &kp LG(LA(DOWN_ARROW))  &kp LA(LG(UP_ARROW))  &kp LA(LG(RIGHT))  &trans  &trans
+&trans  &trans          &trans        &trans        &trans        &trans        &trans  &trans &trans            &trans                  &trans                &trans             &trans  &trans
+&trans  &trans          &trans        &trans        &trans        &trans                       &trans            &trans                  &trans                &trans             &trans  &trans
+            >;
+        };
+    };
+};
