@@ -1,3 +1,5 @@
 name: zmk-config-cornix
 build:
   kconfig: Kconfig
+  settings:
+    board_root: .
