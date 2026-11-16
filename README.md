@@ -1,6 +1,6 @@
 # Cornix 전용 동글 ZMK 설정
 
-이 저장소는 원래 Cornix 키맵을 유지하면서 Cornix 양쪽과 nice!nano 호환 OLED 동글만 빌드합니다. Corne 빌드나 원래 Corne 저장소는 포함하지 않습니다. 원래 Cornix 저장소는 별도로 보존합니다.
+이 저장소는 최신 Cornix 키맵을 유지하면서 Cornix 양쪽과 nice!nano 호환 OLED 동글을 빌드합니다. Corne 설정은 zmk-config-corne에서 별도로 관리합니다.
 
 - `cornix_dongle_oled.uf2`: OLED 동글용. 기존 `DongleDongleCorn`, Bongo Cat, macOS 수정키, L/R 배터리 화면을 유지합니다.
 - `cornix_left_for_dongle.uf2`: Cornix 왼쪽, 동글의 주변기기.
