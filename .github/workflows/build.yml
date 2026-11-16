@@ -4,11 +4,17 @@ on:
   push:
     paths:
       - "config/**"
+      - "boards/**"
+      - "zephyr/**"
+      - "build.yaml"
+      - "Kconfig"
+      - ".github/workflows/**"
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@4de313367288aad5aeaa1243890e40dc813f7008
   draw:
+    if: github.ref == 'refs/heads/main'
     uses: caksoylar/keymap-drawer/.github/workflows/draw-zmk.yml@main
     permissions:
       contents: write
