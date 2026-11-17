@@ -12,6 +12,12 @@
 
 `config/cornix.keymap`은 사용자 Cornix 원본에서 가져온 파일이며, `config/cornix_dongle_adapter.keymap`은 이를 동글 빌드에서 사용합니다. 화면 모듈은 이 저장소에 포함되어 있으며 L/R 배터리와 Bongo Cat 등의 수정사항을 유지합니다.
 
+## 키맵
+
+![Cornix 키맵](keymap-drawer/cornix.svg)
+
+[키맵 원본](config/cornix.keymap) · [SVG 크게 보기](keymap-drawer/cornix.svg)
+
 ## 화면 모듈 출처
 
 `boards/shields/dongle_display`는 [englmaxi/zmk-dongle-display](https://github.com/englmaxi/zmk-dongle-display)를 기반으로 사용자가 수정한 코드입니다. 해당 디렉터리의 MIT LICENSE를 참조하세요. 화면 모듈을 별도 사용자 저장소에서 내려받지 않습니다.
