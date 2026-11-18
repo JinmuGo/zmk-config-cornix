@@ -2,7 +2,7 @@
 
 이 저장소는 최신 Cornix 키맵을 유지하면서 Cornix 양쪽과 nice!nano 호환 OLED 동글을 빌드합니다. Corne 설정은 zmk-config-corne에서 별도로 관리합니다.
 
-- `cornix_dongle_oled.uf2`: OLED 동글용. 기존 `DongleDongleCorn`, Bongo Cat, macOS 수정키, L/R 배터리 화면을 유지합니다.
+- `cornix_dongle_oled.uf2`: OLED 동글용. 기존 `DongleDongleCorn`, 겨울 당근이 애니메이션, macOS 수정키, L/R 배터리 화면을 유지합니다.
 - `cornix_left_for_dongle.uf2`: Cornix 왼쪽, 동글의 주변기기.
 - `cornix_right_for_dongle.uf2`: Cornix 오른쪽, 동글의 주변기기.
 - `cornix_halves_settings_reset.uf2`: Cornix 양쪽의 설정 초기화용. 각 반쪽에 따로 넣습니다.
@@ -10,13 +10,27 @@
 
 설정 초기화는 페어링과 호스트 프로필을 지웁니다. 필요 없이 설정 초기화를 하지 마세요. 기존 동글 구성에서 옮길 때 먼저 새 일반 UF2만 사용해 연결을 확인하고, 연결되지 않을 경우에만 기존 저장된 연결 관계를 고려해 필요한 장치들을 초기화하고 재페어링합니다. 초기화하면 Corne 같은 기존 주변기기 및 호스트 연결을 다시 잡아야 할 수 있습니다. 물리 기기에서 입력, 각 인코더, OLED 및 USB/BLE를 직접 검증하세요.
 
-`config/cornix.keymap`은 사용자 Cornix 원본에서 가져온 파일이며, `config/cornix_dongle_adapter.keymap`은 이를 동글 빌드에서 사용합니다. 화면 모듈은 이 저장소에 포함되어 있으며 L/R 배터리와 Bongo Cat 등의 수정사항을 유지합니다.
+`config/cornix.keymap`은 사용자 Cornix 원본에서 가져온 파일이며, `config/cornix_dongle_adapter.keymap`은 이를 동글 빌드에서 사용합니다. 화면 모듈은 이 저장소에 포함되어 있으며 L/R 배터리와 겨울 당근이 애니메이션 등의 수정사항을 유지합니다.
 
 ## 키맵
 
 ![Cornix 키맵](keymap-drawer/cornix.svg)
 
 [키맵 원본](config/cornix.keymap) · [SVG 크게 보기](keymap-drawer/cornix.svg)
+
+## 동글 OLED 픽셀 미리보기
+
+![겨울 당근이 OLED 픽셀 애니메이션](oled-preview.gif)
+
+목도리를 두른 겨울 당근이가 눈송이 사이에서 타이핑합니다. **대기 → 느린 타이핑 → 보통 → 빠른 타이핑** 순서로 반복됩니다.
+
+- 대기 중에는 눈을 깜빡이고, 키 입력 시 바로 타이핑 동작을 시작합니다.
+- 타이핑 속도(WPM)에 따라 양손 동작이 빨라지고, 빠른 타이핑에서는 몸이 들썩입니다.
+- 실제 펌웨어의 **50×26 캐릭터 영역**과 애니메이션 순서·시간을 읽어 4배 확대한 GIF입니다. 배터리·연결 상태를 포함한 전체 OLED 화면이나 실기 촬영은 아닙니다. 단계 전환은 설명용이며, 실제 동글에서는 키 입력과 WPM에 반응합니다.
+
+[GIF 크게 보기](oled-preview.gif) · [픽셀 원본](boards/shields/dongle_display/widgets/bongo_cat_images.c) · [애니메이션 코드](boards/shields/dongle_display/widgets/bongo_cat.c)
+
+재생성: 저장소 루트에서 `node generate-oled-preview.mjs` (추가 패키지 없이 실행). 픽셀이나 애니메이션을 바꾸면 GIF도 다시 생성해 커밋하세요.
 
 ## 화면 모듈 출처
 
